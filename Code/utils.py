@@ -395,8 +395,6 @@ def create_model(data, no_classes, optimizer, dropout_rate=0.5, summary=True): #
         input2 = Conv2D(input_shape=inshape,filters=1,kernel_size=(3,3),padding='same',data_format="channels_last")(input2) #unspecified
         input2 = BatchNormalization()(input2)   # end macro layer 1
         input2 = MaxPooling2D(pool_size=(4, 4), padding='same')(input2)
-        #todo add maxpool2D -> modified last dimension to 50
-
 
         input2 = Conv2D(input_shape=inshape,filters=1,kernel_size=(3,3),padding='same',data_format="channels_last")(input2) #unspecified
         input2 = Activation('relu')(input2) #unspecified by Radu Dogaru
@@ -408,9 +406,7 @@ def create_model(data, no_classes, optimizer, dropout_rate=0.5, summary=True): #
         input2 = BatchNormalization()(input2)   #end macro layer 3
         input2 = MaxPooling2D(pool_size=(4,4), padding='same')(input2)
         input2 = GlobalAveragePooling2D()(input2)
-        # todo add global average pooling and remove flatten
-        input2 = Flatten()(input2)  #RDT processing might be the key. this is some sort of spectral feature thing
-        # todo add dense
+        input2 = Flatten()(input2)  #RDT feature processing might be the key (see prof. Dogaru paper). this is some sort of spectral feature thing
     else:
         print("in create model inshape = ", inshape)
         input2 = Conv1D(input_shape=inshape,filters=1,kernel_size=1,padding='same',data_format="channels_last")(input2)
@@ -784,7 +780,6 @@ def plot_roc_curve(y_true, y_score):
 
 
 def spectrogram(x, n_fft = 2048, hop_len = None, win_len = None, win_type = "hann", center = True):
-    #todo could use boxcar window tho
 
     """
     This function extracts the spectrogram with the librosa STFT function.

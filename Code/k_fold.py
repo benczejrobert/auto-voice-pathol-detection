@@ -79,7 +79,7 @@ def k_fold(path, k, fold_nr, tfrecord, train_cardinality):
             random.shuffle(files)
             if k == 1:
                 nr_of_files_to_load = len(files) // 5  #one speaker val hardcoded
-                #todo un-hardcode this, make it user-specified^
+                #todo un-hardcode this //5, make it user-specified^
             else:
                 nr_of_files_to_load = len(files) // k
             range_min = (fold_nr - 1) * nr_of_files_to_load

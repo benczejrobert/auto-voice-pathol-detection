@@ -77,11 +77,7 @@ class FeatureExtractor:
                     except:
                         features.append(feature)  # if feature is not an iterable i.e. tempo
                 if id == 'mfcc' and not keep_feature_dims:
-                    feature = np.mean(feature, axis=-1)  #todo sau fa-le flatten idk -> reduces time dimension
-                    # feature = np.flatten(feature)
-                    # feature.T.flatten()
-                    # feature = np.mean(feature, axis=0)  #-> reduces MFCC dimension
-                    # feature = feature[0]
+                    feature = np.mean(feature, axis=-1)
                 try:
                     features.extend(feature)  # if feature is an iterable
                 except:

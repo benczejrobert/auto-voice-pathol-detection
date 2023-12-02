@@ -22,13 +22,7 @@ def main():
     predict = True  #[boolean], predict using a model that is loaded from path_model
     save_results = True
     shuffle_mode = False  # [boolean], if True shuffles train and validation datasets as one dataset, else individually
-    #todo ^ False is more appropriate for pathology classification
-    # if the data are features extracted from vowels that exhibit a quite strong periodicity
     check = True # [boolean] checks for speakers having more than one of the downloaded pathologies
-
-    #todo nu mai extrage smad si medie din features, da la retea doar spectrograe/MFCC
-    # nu mai folosi features in frecventa
-    # add new features
 
     respath = os.path.join('..','Results')
     featspath = os.path.join('..','Features'+EGG)   #path to save the Features to
@@ -44,14 +38,13 @@ def main():
     # Arguments for iterate dataset
     db_path = os.path.join('..', 'Datasets'+EGG)  #[path], relative path to the pathology database
     non_windowed_db = db_path
-    if os.path.exists(os.path.join('..', 'Windowed_signals'+EGG)) and EGG == '':    #todo make functionality for EGG as well
+    if os.path.exists(os.path.join('..', 'Windowed_signals'+EGG)) and EGG == '':
         db_path = os.path.join('..', 'Windowed_signals'+EGG)
-    #todo do the same with a Windowed_EGGs folder
 
 
     overwrite = False #[boolean] if True delete the previously existing Features folder for a clean extraction
     # window_length = 3 * 22050  #[int], length of a window in samples (1s = 22050 samples)
-    window_length = 50000//50  #[int], length of a window in samples (1s = 50000 samples)   #20 ms -> still hardcoded. #todo write this in ms then use a formula to calculate the sample_len from it for sigwin
+    window_length = 50000//50  #[int], length of a window in samples (1s = 50000 samples)   #20 ms -> still hardcoded.
     window_type = 'rect'  #[string], type of window e.g: rect, blackman, etc
     overlap = 50  #[int] window overlap percentage (between 0 and 100)
     feature_extractor = FeatureExtractor()
@@ -62,13 +55,13 @@ def main():
     # feature_list = ['mfcc']
     feature_list = ['mel_spect']
     # feature_list = ['dtcwpt']
-    identity = False # if True, save the windowed signals to the disk to os.path.join('..','Windowed_signals') # todo windowed sognals
+    identity = False # if True, save the windowed signals to the disk to os.path.join('..','Windowed_signals')
     feature_dict = {'sr': 50000, 'n_fft': 2048, 'n_mfcc': 26, 'hop_length': 512//4, 'margin': 3.0, 'n_lvls':5,'wavelet_type':'db1'}  #[dict] of args for feature extractor (parameters for different functions)
     #old hop_length 512//4 # or 1024
-    #todo make hop_len greater like 1024 or sumthin WOOOOOOO -> MFCC will be 1D and den just transpose it
+
     window = True  # [boolean], True = the features will be extracted window by window, False = directly from the array of signals.
-    normalize = False  #[boolean], normalize the signal (song) in range [-1;1] #todo should be the data that goes into the NN
-    standardize = False  #[bool], standardize the signal (song). For each sample x: x = (x - mean(signal)) / std(signal) #todo should be the data that goes to the NN
+    normalize = False  #[boolean], normalize the signal (song) in range [-1;1]
+    standardize = False  #[bool], standardize the signal (song). For each sample x: x = (x - mean(signal)) / std(signal)
     variance_type = 'smad'  #[string], type of variance, either 'var' or 'smad'
     min_sig_len = None #[int], no of samples to trim the other voice recordings to; None if no trimming will be performed
     raw_features = True #[bool] if True, skips mean and var extraction from the audio features in the feature list
@@ -78,7 +71,7 @@ def main():
     # Arguments for split dataset
     split_path = os.path.join('..', 'Features-combined')+EGG  #[path], relative path to Features folder
     # split_perc = 90  #[int], percentage of Train files for splitting between Test and Train
-    split_perc = 84  #todo test = 17% of 6 speakers = 1; 17% of 54 voicerecs = 9
+    split_perc = 84
 
     # Arguments for k_fold_cross_validation (train)
     k_fold_path = os.path.join('..', 'Train')  #[path], relative path to Train folder
@@ -119,8 +112,6 @@ def main():
 
         iterate_dataset(db_path+'-egg', window_length, window_type, overlap, feature_extractor, feature_dict, feature_list,
                         window, normalize, standardize, tfrecord, variance_type, min_sig_len, overwrite, identity, featspath+'-egg', raw_features, keep_feature_dims)
-
-        #todo make some function that concatenates all the npys from this combined dataset and saves them to a new folder. I.E. places the MFCC matrices one next to another or one above another idk
 
         save_classlist(db_path)
         combine_datasets(db_path, db_path+'-egg', featspath, tfrecord, None, overwrite)
