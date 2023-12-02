@@ -1,4 +1,4 @@
-# auto-voice-pathol-detection
+# Automatic voice pathology detection
 
 This project was originally created with Python 3.7.4, but it runs on Python 3.10.6 as well.
 
